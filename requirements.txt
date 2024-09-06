@@ -1,0 +1,7 @@
+Bootstrap_Flask==2.3.3
+Flask_WTF==1.2.1
+WTForms==3.0.1
+Flask==2.3.2
+pillow==10.4.0
+numpy~=2.1.1
+werkzeug==3.0.4

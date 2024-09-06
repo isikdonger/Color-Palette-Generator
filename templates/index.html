@@ -1,0 +1,77 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Color Palette Generator</title>
+    <style>
+        .color-table {
+            width: 100%;
+            border-collapse: collapse;
+        }
+        .color-table th, .color-table td {
+            padding: 10px;
+            text-align: left;
+            border: 1px solid #ddd;
+        }
+        .color-box {
+            width: 50px;
+            height: 50px;
+            display: inline-block;
+            margin-right: 10px;
+            vertical-align: middle;
+        }
+        .color-text {
+            vertical-align: middle;
+        }
+    </style>
+</head>
+<body>
+    <h1>Color Palette Generator</h1>
+    <form method="POST" action="{{ url_for('home') }}" enctype="multipart/form-data">
+        {{ form.hidden_tag() }}  <!-- CSRF token -->
+        <div class="mb-3">
+            {{ form.img.label(class="form-label") }}
+            {{ form.img(class="form-control") }}
+        </div>
+        <div class="mb-3" id="btn">
+            {{ form.submit(class="btn btn-primary") }}
+        </div>
+    </form>
+    {% if color_data %}
+    <table class="color-table">
+        <thead>
+            <tr>
+                <th>Color</th>
+                <th>Details</th>
+            </tr>
+        </thead>
+        <tbody>
+            {% for color, count in color_data %}
+                {% if color|length == 3 %}
+                    {% set r, g, b = color %}
+                    {% set all_high = (r > 225) and (g > 225) and (b > 225) %}
+                    {% set bg_color = 'black' if all_high else 'transparent' %}
+                    <tr>
+                        <td style="background-color: {{ bg_color }}">
+                            <div class="color-box" style="background-color: rgb{{ color }};"></div>
+                        </td>
+                        <td>
+                            <span class="color-text">RGB{{ color }}</span><br>
+                            <span class="color-text">({{ (count / total * 100) | round(2) }}%)</span>
+                        </td>
+                    </tr>
+                {% else %}
+                    <tr>
+                        <td colspan="2">Invalid color format: {{ color }}</td>
+                    </tr>
+                {% endif %}
+            {% endfor %}
+        </tbody>
+    </table>
+    {% else %}
+    <p>No colors to display.</p>
+    {% endif %}
+</body>
+</html>
+
+
